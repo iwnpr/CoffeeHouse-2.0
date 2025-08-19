@@ -1,6 +1,9 @@
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using MenuService.Data;
 using MenuService.Interfaces;
 using MenuService.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace MenuService.Repositories
 {
@@ -13,38 +16,41 @@ namespace MenuService.Repositories
             _context = context;
         }
 
-        public void Add(MenuItem item)
+        public async Task AddAsync(MenuItem item)
         {
-            _context.MenuItems.Add(item);
-            SaveChanges();
+            await _context.MenuItems.AddAsync(item);
+            await SaveChangesAsync();
         }
 
-        public void Update(MenuItem item)
+        public async Task UpdateAsync(MenuItem item)
         {
             _context.MenuItems.Update(item);
-            SaveChanges();
+            await SaveChangesAsync();
         }
 
-        public void Delete(Guid id)
+        public async Task DeleteAsync(Guid id)
         {
-            var item = _context.MenuItems.Find(id);
-            _context.MenuItems.Remove(item);
-            SaveChanges();
+            var item = await _context.MenuItems.FindAsync(id);
+            if (item != null)
+            {
+                _context.MenuItems.Remove(item);
+                await SaveChangesAsync();
+            }
         }
 
-        public IEnumerable<MenuItem> GetAll()
+        public async Task<IEnumerable<MenuItem>> GetAllAsync()
         {
-            return _context.MenuItems.ToList();
+            return await _context.MenuItems.ToListAsync();
         }
 
-        public MenuItem GetById(Guid id)
+        public async Task<MenuItem?> GetByIdAsync(Guid id)
         {
-            return _context.MenuItems.Find(id);
+            return await _context.MenuItems.FindAsync(id);
         }
 
-        public bool SaveChanges()
+        public async Task<bool> SaveChangesAsync()
         {
-            return _context.SaveChanges() > 0;
+            return await _context.SaveChangesAsync() > 0;
         }
     }
 }

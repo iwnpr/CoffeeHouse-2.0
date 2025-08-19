@@ -1,3 +1,7 @@
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using MenuService.Exceptions;
 using MenuService.Interfaces;
 using MenuService.Models;
 
@@ -12,74 +16,47 @@ namespace MenuService.Facades
             _repo = repo;
         }
 
-        public void AddItem(MenuItem item)
+        public async Task AddItem(MenuItem item)
         {
-            try
-            {
-                _repo.Add(item);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+            await _repo.AddAsync(item);
         }
 
-        public IEnumerable<MenuItem> GetAllItems()
+        public async Task<IEnumerable<MenuItem>> GetAllItems()
         {
-            try
-            {
-                var allItems = _repo.GetAll();
-                return allItems;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+            return await _repo.GetAllAsync();
         }
 
-        public MenuItem GetById(Guid id)
+        public async Task<MenuItem> GetById(Guid id)
         {
-            try
+            var item = await _repo.GetByIdAsync(id);
+            if (item == null)
             {
-                var item = _repo.GetById(id);
+                throw new MenuItemNotFoundException(id);
+            }
 
-                if (item == null)
-                {
-                    throw new Exception("Item not found.");
-                }
-                
-                return item;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+            return item;
         }
 
-        public void Update(MenuItem item)
+        public async Task Update(MenuItem item)
         {
-            try
+            var existing = await _repo.GetByIdAsync(item.Id);
+            if (existing == null)
             {
-                var existing = _repo.GetById(item.Id) ?? throw new Exception("Item not found.");
-                _repo.Update(item);
+                throw new MenuItemNotFoundException(item.Id);
             }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+
+            await _repo.UpdateAsync(item);
         }
 
-        public void Delete(Guid id)
+        public async Task Delete(Guid id)
         {
-            try
+            var existing = await _repo.GetByIdAsync(id);
+            if (existing == null)
             {
-                var existing = _repo.GetById(id) ?? throw new Exception("Item not found.");
-                _repo.Delete(id);
+                throw new MenuItemNotFoundException(id);
             }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+
+            await _repo.DeleteAsync(id);
         }
     }
 }
