@@ -8,11 +8,11 @@ namespace MenuService.Interfaces
 {
     public interface IMenuRepository
     {
-        void Add(MenuItem item);
-        void Update(MenuItem item);
-        void Delete(Guid id);
-        IEnumerable<MenuItem> GetAll();
-        MenuItem GetById(Guid id);
-        bool SaveChanges();
+        Task AddAsync(MenuItem item);
+        Task UpdateAsync(MenuItem item);
+        Task DeleteAsync(Guid id);
+        Task<IEnumerable<MenuItem>> GetAllAsync();
+        Task<MenuItem?> GetByIdAsync(Guid id);
+        Task<bool> SaveChangesAsync();
     }
 }

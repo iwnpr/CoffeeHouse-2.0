@@ -1,13 +1,16 @@
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using MenuService.Models;
 
 namespace MenuService.Interfaces
 {
     public interface IMenuServiceFacade
     {
-        void AddItem(MenuItem item);
-        IEnumerable<MenuItem> GetAllItems();
-        MenuItem GetById(Guid id);
-        void Update(MenuItem item);
-        void Delete(Guid id);
+        Task AddItem(MenuItem item);
+        Task<IEnumerable<MenuItem>> GetAllItems();
+        Task<MenuItem> GetById(Guid id);
+        Task Update(MenuItem item);
+        Task Delete(Guid id);
     }
 }
