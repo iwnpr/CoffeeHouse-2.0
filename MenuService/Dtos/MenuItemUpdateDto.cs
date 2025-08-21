@@ -2,9 +2,8 @@ using MenuService.Enums;
 
 namespace MenuService.Dtos
 {
-    public class MenuItemReadDto
+    public class MenuItemUpdateDto
     {
-        public Guid Id { get; set; }
         public string Name { get; set; }
         public string? Description { get; set; }
         public long Price { get; set; }

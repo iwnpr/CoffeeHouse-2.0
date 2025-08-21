@@ -15,6 +15,7 @@ namespace MenuService.Profiles
             // Source -> Target
             CreateMap<MenuItem, MenuItemReadDto>();
             CreateMap<MenuItemCreateDto, MenuItem>();
+            CreateMap<MenuItemUpdateDto, MenuItem>();
         }
     }
 }

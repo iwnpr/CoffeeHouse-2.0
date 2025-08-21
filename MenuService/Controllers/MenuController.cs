@@ -52,14 +52,13 @@ namespace MenuService.Controllers
             }
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateMenuItem(MenuItemReadDto menuItemUpdateDto)
+        [HttpPut]
+        public async Task<IActionResult> UpdateMenuItem(Guid id, MenuItemUpdateDto menuItemUpdateDto)
         {
-            var menuItem = _mapper.Map<MenuItem>(menuItemUpdateDto);
             try
             {
-                await _facade.Update(menuItem);
-                return Ok(_mapper.Map<MenuItemReadDto>(menuItem));
+                await _facade.Update(id, menuItemUpdateDto);
+                return Ok();
             }
             catch (MenuItemNotFoundException)
             {

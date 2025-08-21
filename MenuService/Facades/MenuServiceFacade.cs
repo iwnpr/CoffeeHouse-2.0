@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using AutoMapper;
+using MenuService.Dtos;
 using MenuService.Exceptions;
 using MenuService.Interfaces;
 using MenuService.Models;
@@ -11,9 +13,12 @@ namespace MenuService.Facades
     {
         private readonly IMenuRepository _repo;
 
-        public MenuServiceFacade(IMenuRepository repo)
+        private readonly IMapper _mapper;
+
+        public MenuServiceFacade(IMenuRepository repo, IMapper mapper)
         {
             _repo = repo;
+            _mapper = mapper;
         }
 
         public async Task AddItem(MenuItem item)
@@ -37,15 +42,16 @@ namespace MenuService.Facades
             return item;
         }
 
-        public async Task Update(MenuItem item)
+        public async Task Update(Guid id, MenuItemUpdateDto menuItemUpdateDto)
         {
-            var existing = await _repo.GetByIdAsync(item.Id);
-            if (existing == null)
-            {
-                throw new MenuItemNotFoundException(item.Id);
-            }
+            var existing = await _repo.GetByIdAsync(id);
 
-            await _repo.UpdateAsync(item);
+            if (existing is null)
+                throw new MenuItemNotFoundException(id);
+
+            _mapper.Map(menuItemUpdateDto, existing);
+
+            await _repo.UpdateAsync(existing);
         }
 
         public async Task Delete(Guid id)
