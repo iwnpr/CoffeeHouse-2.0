@@ -1,14 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using OrderService.Data;
-using OrderService.Facades;
-using OrderService.Interfaces;
-using OrderService.Repositories;
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<OrderDbContext>(options => options.UseInMemoryDatabase("OrderDb"));
-builder.Services.AddScoped<IOrderRepository, OrderRepository>();
-builder.Services.AddScoped<IOrderServiceFacade, OrderServiceFacade>();
+
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddControllers();
